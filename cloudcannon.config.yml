@@ -1,42 +1,77 @@
-# cloudcannon.config.yml
+# CloudCannon config for Hugo portfolio
+source: content
 collections_config:
   blog:
     path: content/blog
+    name: Blog Posts
+    description: Updates and engineering notes
     output: true
-    url: "/blog/[slug]/"
     _enabled_editors:
       - content
       - visual
-    schemas:
-      default:
-        path: schemas/post.md # We will make this next
-    name: "Lab Notebook"
-    icon: "local_library"
-
+    _inputs:
+      title:
+        type: text
+      date:
+        type: datetime
+      draft:
+        type: switch
+      tags:
+        type: multiselect
+        options:
+          values:
+            - embedded-systems
+            - fpga
+            - 4004-recreation
+            - vintage-electronics
+            - automotive
+      summary:
+        type: textarea
+        
   projects:
     path: content/projects
+    name: Project Documentation
+    description: Technical project documentation
     output: true
+    filter:
+      exclude:
+        - "4004/**"  # This is mounted from external repo
     _enabled_editors:
       - content
-    name: "Projects"
-    icon: "memory"
+      - visual
+    _inputs:
+      title:
+        type: text
+      date:
+        type: datetime
+      draft:
+        type: switch
+      summary:
+        type: textarea
 
-# This configures the sidebar inputs for your posts
+# Data editing
+data_config:
+  authors:
+    path: data/authors.yml
+    
+# Build configuration  
 _inputs:
-  title:
-    label: Post Title
-  date:
-    instance_value: NOW
+  image:
+    type: image
+    comment: Upload or select an image
+  tags:
+    type: multiselect
   draft:
     type: switch
-    label: Is Draft?
-  summary:
-    type: textarea
-    label: Short Summary (for homepage)
-  cover:
-    type: object
-    options:
-      image:
-        type: image
-        label: Cover Image
-        comment: "Appears on the homepage card"
+    comment: Hide this content in production
+    
+# Editor settings
+_editables:
+  content:
+    bold: true
+    italic: true
+    bulletedlist: true
+    numberedlist: true
+    code: true
+    link: true
+    table: true
