@@ -1,12 +1,42 @@
----
-title: "{{ replace .Name "-" " " | title }}"
-date: {{ .Date }}
-draft: false
-summary: ""
-cover:
-  image: ""
-  alt: ""
-  caption: ""
----
+# cloudcannon.config.yml
+collections_config:
+  blog:
+    path: content/blog
+    output: true
+    url: "/blog/[slug]/"
+    _enabled_editors:
+      - content
+      - visual
+    schemas:
+      default:
+        path: schemas/post.md # We will make this next
+    name: "Lab Notebook"
+    icon: "local_library"
 
-Start writing here...
+  projects:
+    path: content/projects
+    output: true
+    _enabled_editors:
+      - content
+    name: "Projects"
+    icon: "memory"
+
+# This configures the sidebar inputs for your posts
+_inputs:
+  title:
+    label: Post Title
+  date:
+    instance_value: NOW
+  draft:
+    type: switch
+    label: Is Draft?
+  summary:
+    type: textarea
+    label: Short Summary (for homepage)
+  cover:
+    type: object
+    options:
+      image:
+        type: image
+        label: Cover Image
+        comment: "Appears on the homepage card"
