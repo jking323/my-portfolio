@@ -1,23 +1,49 @@
-# CloudCannon config for Hugo portfolio
+# Read from Hugo's content directory
 source: content
+
+# Define where schemas live
+paths:
+  dam_uploads: static/images
+  dam_static: static
+
+# Schema configuration
+schemas:
+  default: schemas/default.md
+  post: schemas/post.md
+  project: schemas/project.md
+
+# Collections
 collections_config:
   blog:
     path: content/blog
     name: Blog Posts
     description: Updates and engineering notes
     output: true
+    url: /blog/[slug]/
+    icon: edit
+    schema: post
     _enabled_editors:
       - content
       - visual
+      - data
+    add_options:
+      - name: Add Blog Post
+        schema: post
     _inputs:
       title:
         type: text
+        label: Post Title
       date:
         type: datetime
+        label: Published Date
+        instance_value: NOW
       draft:
         type: switch
+        label: Draft
+        comment: Hide this post from production
       tags:
         type: multiselect
+        label: Tags
         options:
           values:
             - embedded-systems
@@ -25,47 +51,104 @@ collections_config:
             - 4004-recreation
             - vintage-electronics
             - automotive
+            - bios
+            - bcm
+            - italian
       summary:
         type: textarea
+        label: Summary
+        comment: Brief description for post listings
+      cover.image:
+        type: image
+        label: Cover Image
+      cover.alt:
+        type: text
+        label: Image Alt Text
+      cover.caption:
+        type: text
+        label: Image Caption
         
   projects:
     path: content/projects
-    name: Project Documentation
-    description: Technical project documentation
+    name: Projects
+    description: Project documentation pages
     output: true
+    url: /projects/[slug]/
+    icon: assignment
+    schema: project
     filter:
       exclude:
-        - "4004/**"  # This is mounted from external repo
+        - "4004/**"  # Mounted from external repo
     _enabled_editors:
       - content
       - visual
+      - data
+    add_options:
+      - name: Add Project Page
+        schema: project
     _inputs:
       title:
         type: text
+        label: Project Title
       date:
         type: datetime
+        label: Date
+        instance_value: NOW
       draft:
         type: switch
+        label: Draft
+      weight:
+        type: number
+        label: Order Weight
+        comment: Lower numbers appear first
       summary:
         type: textarea
+        label: Summary
+      cover.image:
+        type: image
+        label: Cover Image
+      cover.alt:
+        type: text
+        label: Image Alt Text
+      cover.caption:
+        type: text
+        label: Image Caption
 
-# Data editing
-data_config:
-  authors:
-    path: data/authors.yml
-    
-# Build configuration  
+  pages:
+    path: content
+    name: Pages
+    description: Standalone pages
+    output: true
+    icon: description
+    schema: default
+    filter:
+      base: strict
+      include:
+        - "*.md"
+      exclude:
+        - "blog/**"
+        - "projects/**"
+
+# Global input configuration
 _inputs:
+  title:
+    type: text
+  date:
+    type: datetime
+    instance_value: NOW
+  draft:
+    type: switch
   image:
     type: image
     comment: Upload or select an image
   tags:
     type: multiselect
-  draft:
-    type: switch
-    comment: Hide this content in production
-    
-# Editor settings
+    allow_create: true
+  weight:
+    type: number
+    comment: Lower numbers appear first in listings
+
+# Enable visual editor options
 _editables:
   content:
     bold: true
@@ -74,4 +157,27 @@ _editables:
     numberedlist: true
     code: true
     link: true
+    image: true
     table: true
+    undo: true
+    redo: true
+    removeformat: true
+    copyformatting: true
+
+# Source editor settings
+_editor:
+  default_path: /content/blog/
+  
+# CloudCannon-specific Hugo settings
+generator:
+  metadata:
+    breadcrumbs: true
+    
+# Asset handling
+dam:
+  images:
+    output: true
+    formats:
+      - jpeg
+      - png
+      - webp
