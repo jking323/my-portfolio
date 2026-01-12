@@ -1,4 +1,4 @@
-baseURL: "https://www.jeremyking.co/"
+baseURL: "https://jeremyking.co/"
 title: "My Engineering Portfolio"
 theme: ["github.com/adityatelange/hugo-PaperMod"]
 languageCode: "en-us"
